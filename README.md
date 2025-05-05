@@ -126,6 +126,11 @@ with `-f, --format`.
 To specify a custom tsconfig file, use `-t, --tsconfig <tsconfig-file>`.
 It will, by default, look for one in the current directory.
 
+**Important:** the `drizzle-zero.config.ts` file and the Drizzle schema
+files **must be included in the tsconfig** for the type resolution to work.
+If they are not included, there will be an error similar to
+`Failed to find type definitions`.
+
 ### Define Zero schema file
 
 You can then import the `zero-schema.gen.ts` schema from your Zero `schema.ts`
