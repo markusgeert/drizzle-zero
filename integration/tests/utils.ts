@@ -7,8 +7,17 @@ import path from "path";
 import { Pool } from "pg";
 import { GenericContainer, Network, PullPolicy } from "testcontainers";
 import * as drizzleSchema from "../drizzle/schema";
-import { allTypes, filters, friendship, medium, message, user } from "../drizzle/schema";
+import {
+  allTypes,
+  filters,
+  friendship,
+  medium,
+  message,
+  user,
+} from "../drizzle/schema";
 import { schema } from "../schema";
+
+import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 
 const PG_PORT = process.env.PG_VERSION === "17" ? 5732 : 5632;
 const ZERO_PORT = process.env.PG_VERSION === "17" ? 5949 : 4949;
@@ -30,7 +39,7 @@ const pool = new Pool({
   database: "drizzle_zero",
 });
 
-export const db = drizzle(pool, {
+export const db: NodePgDatabase<typeof drizzleSchema> = drizzle(pool, {
   schema: drizzleSchema,
   casing: "snake_case",
 });
