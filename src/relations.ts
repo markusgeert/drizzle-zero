@@ -27,11 +27,26 @@ import type {
 } from "./types";
 import { debugLog, typedEntries } from "./util";
 
+/**
+ * Type utility to get the Drizzle custom type for a table and column.
+ *
+ * @template ZeroSchema - The complete Zero schema
+ * @template TableName - The name of the table
+ * @template ColumnName - The name of the column
+ */
 type ZeroCustomType<
-  ZeroSchema extends DrizzleToZeroSchema<any>,
-  TableName extends keyof ZeroSchema["tables"],
-  ColumnName extends keyof ZeroSchema["tables"][TableName]["columns"],
-> = ZeroSchema["tables"][TableName]["columns"][ColumnName]["customType"];
+  ZeroSchema extends any,
+  TableName extends string,
+  ColumnName extends string,
+> = ZeroSchema extends {
+  tables: {
+    [K in TableName]: {
+      columns: { [L in ColumnName]: { customType: infer T } };
+    };
+  };
+}
+  ? T & {}
+  : unknown;
 
 /**
  * Extracts the table name from a configuration object or string.
@@ -236,11 +251,12 @@ type ReferencedZeroSchemas<
   >;
 
 /**
- * The complete Zero schema type with version and tables.
+ * The mapped Zero schema from a Drizzle schema with version and tables.
+ *
  * @template TDrizzleSchema - The complete Drizzle schema
+ * @template TCasing - The casing to use for the table name
  * @template TColumnConfig - Configuration for the tables
  * @template TManyConfig - Configuration for many-to-many relationships
- * @template TTableBuilderOptions - Options for the table builder
  */
 type DrizzleToZeroSchema<
   TDrizzleSchema extends { [K in string]: unknown },
