@@ -3,7 +3,7 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { pathToFileURL } from "node:url";
 import { Project } from "ts-morph";
-import { getConfigFromFile } from "./config";
+import { getConfigFromFile, getDefaultConfigFilePath } from "./config";
 import { getDefaultConfig } from "./drizzle-kit";
 import { getGeneratedSchema } from "./shared";
 
@@ -61,7 +61,9 @@ async function main(opts: GeneratorOptions = {}) {
   const resolvedTsConfigPath = tsConfigPath ?? defaultTsConfigFile;
   const resolvedOutputFilePath = outputFilePath ?? defaultOutputFile;
 
-  const configFilePath = config;
+  const defaultConfigFilePath = await getDefaultConfigFilePath();
+
+  const configFilePath = config ?? defaultConfigFilePath;
 
   if (!configFilePath) {
     console.log(

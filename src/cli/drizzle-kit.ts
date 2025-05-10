@@ -14,7 +14,10 @@ export const getDefaultConfig = async ({
   drizzleKitConfigPath: string | undefined;
   tsProject: Project;
 }) => {
-  const resolvedDrizzleSchemaPath = await getFullDrizzleSchemaFilePath({
+  const {
+    drizzleSchemaPath: resolvedDrizzleSchemaPath,
+    casing: drizzleCasing,
+  } = await getFullDrizzleSchemaFilePath({
     drizzleSchemaPath,
     drizzleKitConfigPath,
   });
@@ -30,6 +33,7 @@ export const getDefaultConfig = async ({
       tsProject,
       drizzleSchemaPath: resolvedDrizzleSchemaPath,
     }),
+    drizzleCasing,
   } as const;
 };
 
@@ -46,7 +50,10 @@ export const getFullDrizzleSchemaFilePath = async ({
     try {
       await fs.access(fullPath);
 
-      return fullPath;
+      return {
+        drizzleSchemaPath: fullPath,
+        casing: null,
+      };
     } catch (error) {
       console.error(
         `❌ drizzle-zero: could not find Drizzle schema file at ${fullPath}`,
@@ -77,7 +84,10 @@ export const getFullDrizzleSchemaFilePath = async ({
 
           await fs.access(fullPath);
 
-          return fullPath;
+          return {
+            drizzleSchemaPath: fullPath,
+            casing: drizzleKitConfig.casing ?? null,
+          };
         }
       } catch (error) {
         console.error(
@@ -86,7 +96,10 @@ export const getFullDrizzleSchemaFilePath = async ({
         process.exit(1);
       }
 
-      return fullPath;
+      return {
+        drizzleSchemaPath: fullPath,
+        casing: drizzleKitConfig.casing ?? null,
+      };
     } catch (error) {
       console.error(
         `❌ drizzle-zero: could not find Drizzle Kit config file at ${drizzleKitConfigPath}`,

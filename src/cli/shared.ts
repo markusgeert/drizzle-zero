@@ -20,7 +20,13 @@ export async function getGeneratedSchema({
     overwrite: true,
   });
 
-  let outputType: string | undefined;
+  zeroSchemaGenerated.addImportDeclaration({
+    moduleSpecifier: "drizzle-zero",
+    namedImports: [{ name: "ZeroCustomType" }],
+    isTypeOnly: true,
+  });
+
+  let zeroSchemaSpecifier: string | undefined;
 
   if (result.type === "config") {
     const moduleSpecifier =
@@ -31,11 +37,11 @@ export async function getGeneratedSchema({
     // Add import for DrizzleConfigSchema
     zeroSchemaGenerated.addImportDeclaration({
       moduleSpecifier,
-      namedImports: [{ name: result.exportName, alias: "DrizzleConfigSchema" }],
+      namedImports: [{ name: result.exportName, alias: "zeroSchema" }],
       isTypeOnly: true,
     });
 
-    outputType = "typeof DrizzleConfigSchema";
+    zeroSchemaSpecifier = "typeof zeroSchema";
   } else {
     const moduleSpecifier =
       zeroSchemaGenerated.getRelativePathAsModuleSpecifierTo(
@@ -44,11 +50,9 @@ export async function getGeneratedSchema({
 
     zeroSchemaGenerated.addImportDeclaration({
       moduleSpecifier,
-      namespaceImport: "DrizzleZeroTypes",
+      namespaceImport: "drizzleSchema",
       isTypeOnly: true,
     });
-
-    outputType = "DrizzleToZeroSchema<typeof DrizzleZeroTypes>";
 
     // Add import for DrizzleToZeroSchema type
     zeroSchemaGenerated.addImportDeclaration({
@@ -56,6 +60,14 @@ export async function getGeneratedSchema({
       namedImports: [{ name: "DrizzleToZeroSchema" }],
       isTypeOnly: true,
     });
+
+    zeroSchemaGenerated.addTypeAlias({
+      name: "ZeroSchema",
+      isExported: false,
+      type: `DrizzleToZeroSchema<typeof drizzleSchema${result.drizzleCasing ? `, "${result.drizzleCasing}"` : ""}>`,
+    });
+
+    zeroSchemaSpecifier = "ZeroSchema";
   }
 
   const schemaVariable = zeroSchemaGenerated.addVariableStatement({
@@ -99,8 +111,11 @@ export async function getGeneratedSchema({
 
                   // Special handling for customType: null
                   if (key === "customType" && propValue === null) {
+                    const tableIndex = 1;
+                    const columnIndex = 3;
+
                     writer.write(
-                      `null as ${outputType}${[...keys, "customType"].map((k) => `["${k}"]`).join("")}`,
+                      `null as ZeroCustomType<${zeroSchemaSpecifier}, "${keys[tableIndex]}", "${keys[columnIndex]}">`,
                     );
                   } else {
                     writeValue(propValue, [...keys, key], indent + 2);
@@ -145,9 +160,9 @@ export async function getGeneratedSchema({
 
   zeroSchemaGenerated.formatText();
 
-  const organizedFile = zeroSchemaGenerated.organizeImports();
+  // const organizedFile = zeroSchemaGenerated.organizeImports();
 
-  const file = organizedFile.getText();
+  const file = zeroSchemaGenerated.getText();
 
   return `/* eslint-disable */
 /* tslint:disable */

@@ -27,6 +27,12 @@ import type {
 } from "./types";
 import { debugLog, typedEntries } from "./util";
 
+type ZeroCustomType<
+  ZeroSchema extends DrizzleToZeroSchema<any>,
+  TableName extends keyof ZeroSchema["tables"],
+  ColumnName extends keyof ZeroSchema["tables"][TableName]["columns"],
+> = ZeroSchema["tables"][TableName]["columns"][ColumnName]["customType"];
+
 /**
  * Extracts the table name from a configuration object or string.
  * @template TTableConfig - The configuration object or string
@@ -962,4 +968,4 @@ const getDrizzleKeyFromTableName = ({
   )?.[0]!;
 };
 
-export { drizzleZeroConfig, type DrizzleToZeroSchema };
+export { drizzleZeroConfig, type DrizzleToZeroSchema, type ZeroCustomType };

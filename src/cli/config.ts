@@ -4,6 +4,20 @@ import { Project } from "ts-morph";
 import { tsImport } from "tsx/esm/api";
 import type { DrizzleToZeroSchema } from "../relations";
 
+export const defaultConfigFilePath = "drizzle-zero.config.ts";
+
+export const getDefaultConfigFilePath = async () => {
+  const fullConfigPath = path.resolve(process.cwd(), defaultConfigFilePath);
+
+  try {
+    await fs.access(fullConfigPath);
+  } catch (error) {
+    return null;
+  }
+
+  return "drizzle-zero.config.ts";
+};
+
 export const getConfigFromFile = async ({
   configFilePath,
   tsProject,

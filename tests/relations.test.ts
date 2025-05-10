@@ -8,7 +8,11 @@ import {
 } from "@rocicorp/zero";
 import { describe, test } from "vitest";
 import { assertEqual, expectSchemaDeepEqual } from "./utils";
-import { drizzleZeroConfig, type DrizzleToZeroSchema } from "../src/relations";
+import {
+  drizzleZeroConfig,
+  type DrizzleToZeroSchema,
+  type ZeroCustomType,
+} from "../src/relations";
 
 describe("relationships", () => {
   test("relationships - many-to-many-incorrect-many", async ({ expect }) => {
@@ -248,6 +252,15 @@ describe("relationships", () => {
 
     const directMapping = drizzleZeroConfig(drizzleSchema);
     assertEqual(directMapping, expected);
+
+    assertEqual(
+      null as unknown as ZeroCustomType<
+        DrizzleToZeroSchema<typeof drizzleSchema>,
+        "users",
+        "invitedBy"
+      >,
+      null as unknown as string,
+    );
   });
 
   test("relationships - one-to-one", async () => {

@@ -16,8 +16,11 @@
  * ------------------------------------------------------------
  */
 
+import type { ZeroCustomType } from "drizzle-zero";
+import type * as drizzleSchema from "./drizzle/schema";
 import type { DrizzleToZeroSchema } from "drizzle-zero";
-import type * as DrizzleZeroTypes from "./drizzle/schema";
+
+type ZeroSchema = DrizzleToZeroSchema<typeof drizzleSchema, "snake_case">;
 
 /**
  * The Zero schema object.
@@ -31,326 +34,404 @@ export const schema = {
         createdAt: {
           type: "number",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["createdAt"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "createdAt"
+          >,
         },
         updatedAt: {
           type: "number",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["updatedAt"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "updatedAt"
+          >,
         },
         id: {
           type: "string",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["id"]["customType"],
+          customType: null as ZeroCustomType<ZeroSchema, "allTypes", "id">,
         },
         smallintField: {
           type: "number",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["smallintField"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "smallintField"
+          >,
           serverName: "smallint",
         },
         integerField: {
           type: "number",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["integerField"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "integerField"
+          >,
           serverName: "integer",
         },
         bigintField: {
           type: "number",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["bigintField"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "bigintField"
+          >,
           serverName: "bigint",
         },
         bigintNumberField: {
           type: "number",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["bigintNumberField"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "bigintNumberField"
+          >,
           serverName: "bigint_number",
         },
         smallSerialField: {
           type: "number",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["smallSerialField"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "smallSerialField"
+          >,
           serverName: "smallserial",
         },
         serialField: {
           type: "number",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["serialField"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "serialField"
+          >,
           serverName: "serial",
         },
         bigSerialField: {
           type: "number",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["bigSerialField"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "bigSerialField"
+          >,
           serverName: "bigserial",
         },
         numericField: {
           type: "number",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["numericField"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "numericField"
+          >,
           serverName: "numeric",
         },
         decimalField: {
           type: "number",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["decimalField"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "decimalField"
+          >,
           serverName: "decimal",
         },
         realField: {
           type: "number",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["realField"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "realField"
+          >,
           serverName: "real",
         },
         doublePrecisionField: {
           type: "number",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["doublePrecisionField"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "doublePrecisionField"
+          >,
           serverName: "double_precision",
         },
         textField: {
           type: "string",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["textField"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "textField"
+          >,
           serverName: "text",
         },
         charField: {
           type: "string",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["charField"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "charField"
+          >,
           serverName: "char",
         },
         uuidField: {
           type: "string",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["uuidField"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "uuidField"
+          >,
           serverName: "uuid",
         },
         varcharField: {
           type: "string",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["varcharField"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "varcharField"
+          >,
           serverName: "varchar",
         },
         booleanField: {
           type: "boolean",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["booleanField"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "booleanField"
+          >,
           serverName: "boolean",
         },
         timestampField: {
           type: "number",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["timestampField"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "timestampField"
+          >,
           serverName: "timestamp",
         },
         timestampTzField: {
           type: "number",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["timestampTzField"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "timestampTzField"
+          >,
           serverName: "timestamp_tz",
         },
         timestampModeString: {
           type: "number",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["timestampModeString"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "timestampModeString"
+          >,
           serverName: "timestamp_mode_string",
         },
         timestampModeDate: {
           type: "number",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["timestampModeDate"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "timestampModeDate"
+          >,
           serverName: "timestamp_mode_date",
         },
         dateField: {
           type: "number",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["dateField"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "dateField"
+          >,
           serverName: "date",
         },
         jsonField: {
           type: "json",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["jsonField"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "jsonField"
+          >,
           serverName: "json",
         },
         jsonbField: {
           type: "json",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["jsonbField"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "jsonbField"
+          >,
           serverName: "jsonb",
         },
         typedJsonField: {
           type: "json",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["typedJsonField"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "typedJsonField"
+          >,
           serverName: "typed_json",
         },
         statusField: {
           type: "string",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["statusField"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "statusField"
+          >,
           serverName: "status",
         },
         optionalSmallint: {
           type: "number",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["optionalSmallint"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "optionalSmallint"
+          >,
           serverName: "optional_smallint",
         },
         optionalInteger: {
           type: "number",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["optionalInteger"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "optionalInteger"
+          >,
           serverName: "optional_integer",
         },
         optionalBigint: {
           type: "number",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["optionalBigint"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "optionalBigint"
+          >,
           serverName: "optional_bigint",
         },
         optionalNumeric: {
           type: "number",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["optionalNumeric"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "optionalNumeric"
+          >,
           serverName: "optional_numeric",
         },
         optionalReal: {
           type: "number",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["optionalReal"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "optionalReal"
+          >,
           serverName: "optional_real",
         },
         optionalDoublePrecision: {
           type: "number",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["optionalDoublePrecision"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "optionalDoublePrecision"
+          >,
           serverName: "optional_double_precision",
         },
         optionalText: {
           type: "string",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["optionalText"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "optionalText"
+          >,
           serverName: "optional_text",
         },
         optionalBoolean: {
           type: "boolean",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["optionalBoolean"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "optionalBoolean"
+          >,
           serverName: "optional_boolean",
         },
         optionalTimestamp: {
           type: "number",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["optionalTimestamp"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "optionalTimestamp"
+          >,
           serverName: "optional_timestamp",
         },
         optionalJson: {
           type: "json",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["optionalJson"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "optionalJson"
+          >,
           serverName: "optional_json",
         },
         optionalEnum: {
           type: "string",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["optionalEnum"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "optionalEnum"
+          >,
           serverName: "optional_enum",
         },
         optionalVarchar: {
           type: "string",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["optionalVarchar"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "optionalVarchar"
+          >,
           serverName: "optional_varchar",
         },
         optionalUuid: {
           type: "string",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["allTypes"]["columns"]["optionalUuid"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "allTypes",
+            "optionalUuid"
+          >,
           serverName: "optional_uuid",
         },
       },
@@ -363,23 +444,17 @@ export const schema = {
         id: {
           type: "string",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["filters"]["columns"]["id"]["customType"],
+          customType: null as ZeroCustomType<ZeroSchema, "filters", "id">,
         },
         name: {
           type: "string",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["filters"]["columns"]["name"]["customType"],
+          customType: null as ZeroCustomType<ZeroSchema, "filters", "name">,
         },
         parentId: {
           type: "string",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["filters"]["columns"]["parentId"]["customType"],
+          customType: null as ZeroCustomType<ZeroSchema, "filters", "parentId">,
           serverName: "parent_id",
         },
       },
@@ -391,23 +466,29 @@ export const schema = {
         requestingId: {
           type: "string",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["friendship"]["columns"]["requestingId"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "friendship",
+            "requestingId"
+          >,
         },
         acceptingId: {
           type: "string",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["friendship"]["columns"]["acceptingId"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "friendship",
+            "acceptingId"
+          >,
         },
         accepted: {
           type: "boolean",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["friendship"]["columns"]["accepted"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "friendship",
+            "accepted"
+          >,
         },
       },
       primaryKey: ["requestingId", "acceptingId"],
@@ -418,30 +499,22 @@ export const schema = {
         createdAt: {
           type: "number",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["medium"]["columns"]["createdAt"]["customType"],
+          customType: null as ZeroCustomType<ZeroSchema, "medium", "createdAt">,
         },
         updatedAt: {
           type: "number",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["medium"]["columns"]["updatedAt"]["customType"],
+          customType: null as ZeroCustomType<ZeroSchema, "medium", "updatedAt">,
         },
         id: {
           type: "string",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["medium"]["columns"]["id"]["customType"],
+          customType: null as ZeroCustomType<ZeroSchema, "medium", "id">,
         },
         name: {
           type: "string",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["medium"]["columns"]["name"]["customType"],
+          customType: null as ZeroCustomType<ZeroSchema, "medium", "name">,
         },
       },
       primaryKey: ["id"],
@@ -452,51 +525,45 @@ export const schema = {
         createdAt: {
           type: "number",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["message"]["columns"]["createdAt"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "message",
+            "createdAt"
+          >,
         },
         updatedAt: {
           type: "number",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["message"]["columns"]["updatedAt"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "message",
+            "updatedAt"
+          >,
         },
         id: {
           type: "string",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["message"]["columns"]["id"]["customType"],
+          customType: null as ZeroCustomType<ZeroSchema, "message", "id">,
         },
         senderId: {
           type: "string",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["message"]["columns"]["senderId"]["customType"],
+          customType: null as ZeroCustomType<ZeroSchema, "message", "senderId">,
         },
         mediumId: {
           type: "string",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["message"]["columns"]["mediumId"]["customType"],
+          customType: null as ZeroCustomType<ZeroSchema, "message", "mediumId">,
         },
         body: {
           type: "string",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["message"]["columns"]["body"]["customType"],
+          customType: null as ZeroCustomType<ZeroSchema, "message", "body">,
         },
         metadata: {
           type: "json",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["message"]["columns"]["metadata"]["customType"],
+          customType: null as ZeroCustomType<ZeroSchema, "message", "metadata">,
         },
       },
       primaryKey: ["id"],
@@ -507,83 +574,77 @@ export const schema = {
         createdAt: {
           type: "number",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["user"]["columns"]["createdAt"]["customType"],
+          customType: null as ZeroCustomType<ZeroSchema, "user", "createdAt">,
         },
         updatedAt: {
           type: "number",
           optional: true,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["user"]["columns"]["updatedAt"]["customType"],
+          customType: null as ZeroCustomType<ZeroSchema, "user", "updatedAt">,
         },
         id: {
           type: "string",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["user"]["columns"]["id"]["customType"],
+          customType: null as ZeroCustomType<ZeroSchema, "user", "id">,
         },
         name: {
           type: "string",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["user"]["columns"]["name"]["customType"],
+          customType: null as ZeroCustomType<ZeroSchema, "user", "name">,
         },
         partner: {
           type: "boolean",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["user"]["columns"]["partner"]["customType"],
+          customType: null as ZeroCustomType<ZeroSchema, "user", "partner">,
         },
         email: {
           type: "string",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["user"]["columns"]["email"]["customType"],
+          customType: null as ZeroCustomType<ZeroSchema, "user", "email">,
         },
         customTypeJson: {
           type: "json",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["user"]["columns"]["customTypeJson"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "user",
+            "customTypeJson"
+          >,
           serverName: "custom_type_json",
         },
         customInterfaceJson: {
           type: "json",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["user"]["columns"]["customInterfaceJson"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "user",
+            "customInterfaceJson"
+          >,
           serverName: "custom_interface_json",
         },
         testInterface: {
           type: "json",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["user"]["columns"]["testInterface"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "user",
+            "testInterface"
+          >,
           serverName: "test_interface",
         },
         testType: {
           type: "json",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["user"]["columns"]["testType"]["customType"],
+          customType: null as ZeroCustomType<ZeroSchema, "user", "testType">,
           serverName: "test_type",
         },
         testExportedType: {
           type: "json",
           optional: false,
-          customType: null as DrizzleToZeroSchema<
-            typeof DrizzleZeroTypes
-          >["tables"]["user"]["columns"]["testExportedType"]["customType"],
+          customType: null as ZeroCustomType<
+            ZeroSchema,
+            "user",
+            "testExportedType"
+          >,
           serverName: "test_exported_type",
         },
       },
