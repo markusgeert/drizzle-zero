@@ -147,7 +147,7 @@ async function cli() {
         tsConfigPath: command.tsconfig,
         format: command.format,
         outputFilePath: command.output,
-        drizzleSchemaPath: command.drizzleSchema,
+        drizzleSchemaPath: command.schema,
         drizzleKitConfigPath: command.drizzleKitConfig,
         debug: command.debug,
       });
