@@ -12,11 +12,6 @@ yarn add drizzle-zero
 pnpm add drizzle-zero
 ```
 
-## CLI
-
-🚨 The 0.8.0+ releases of `drizzle-zero` ship with a CLI - this is the recommended way to use it going forward.
-A future release will deprecate the code-based version. See below for the documentation.
-
 ## Usage
 
 Here's an example of how to convert a Drizzle schema to a Zero schema with bidirectional relationships:
@@ -58,52 +53,6 @@ export const postsRelations = relations(posts, ({ one }) => ({
 See the [integration test's `schema.ts`](integration/drizzle/schema.ts)
 for more examples of how to define Drizzle schemas with custom types.
 
-### Add `drizzle-zero.config.ts`
-
-Create a new config file at `drizzle-zero.config.ts` with the columns you want to include in the CLI output:
-
-```ts
-import { drizzleZeroConfig } from "drizzle-zero";
-import * as drizzleSchema from "./drizzle-schema";
-
-// Define your configuration file for the CLI
-export default drizzleZeroConfig(drizzleSchema, {
-  // Specify which tables and columns to include in the Zero schema.
-  // This allows for the "expand/migrate/contract" pattern recommended in the Zero docs.
-  // When a column is first added, it should be set to false, and then changed to true
-  // once the migration has been run.
-
-  // All tables/columns must be defined, but can be set to false to exclude them from the Zero schema.
-  // Column names match your Drizzle schema definitions
-  tables: {
-    // this can be set to false
-    // e.g. user: false,
-    users: {
-      id: true,
-      name: true,
-      email: true,
-    },
-    posts: {
-      // or this can be set to false
-      // e.g. id: false,
-      id: true,
-      content: true,
-      // Use the JavaScript field name (authorId), not the DB column name (author_id)
-      authorId: true,
-    },
-  },
-
-  // Specify the casing style to use for the schema.
-  // This is useful for when you want to use a different casing style than the default.
-  // This works in the same way as the `casing` option in the Drizzle ORM.
-  //
-  // @example
-  // casing: "snake_case",
-});
-```
-
-You can customize this config file path with `-c, --config <input-file>`.
-
 ### Add schema generation script
 
 You can then add the schema generation script to your `package.json`:
@@ -117,8 +66,17 @@ You can then add the schema generation script to your `package.json`:
 }
 ```
 
-This command will, by default, output your schema to `zero-schema.gen.ts`.
-You can customize this config file path with `-o, --output <output-file>`.
+This command will look for a Drizzle Kit config at `drizzle.config.ts` in the current directory
+and use the Drizzle schema defined in it. *This must be a single TS file and
+not a folder/glob for type resolution to work*. It will also use the
+casing defined in your drizzle config.
+
+You can change this behavior with `-d, --drizzle-schema <input-file>`
+as the path to your Drizzle schema file, or
+`-k, --drizzle-kit-config <input-file>` with the path to your `drizzle.config.ts` file.
+
+By default, it will output your schema to `zero-schema.gen.ts`.
+You can customize the generated file path with `-o, --output <output-file>`.
 
 If you have Prettier installed, you can use it to format the generated output
 with `-f, --format`.
@@ -126,9 +84,8 @@ with `-f, --format`.
 To specify a custom tsconfig file, use `-t, --tsconfig <tsconfig-file>`.
 It will, by default, look for one in the current directory.
 
-**Important:** the `drizzle-zero.config.ts` file and the Drizzle schema
-files **must be included in the tsconfig** for the type resolution to work.
-If they are not included, there will be an error similar to
+**Important:** the Drizzle schema **must be included in the tsconfig** for
+type resolution to work. If they are not included, there will be an error similar to
 `Failed to find type definitions`.
 
 ### Define Zero schema file
@@ -181,6 +138,58 @@ function PostList() {
   );
 }
 ```
+
+### Customize with `drizzle-zero.config.ts`
+
+If you want to customize the tables/columns that are synced by Zero, you can
+create a new config file at `drizzle-zero.config.ts` specifying the columns you want to
+include in the CLI output:
+
+```ts
+import { drizzleZeroConfig } from "drizzle-zero";
+import * as drizzleSchema from "./drizzle-schema";
+
+// Define your configuration file for the CLI
+export default drizzleZeroConfig(drizzleSchema, {
+  // Specify which tables and columns to include in the Zero schema.
+  // This allows for the "expand/migrate/contract" pattern recommended in the Zero docs.
+  // When a column is first added, it should be set to false, and then changed to true
+  // once the migration has been run.
+
+  // All tables/columns must be defined, but can be set to false to exclude them from the Zero schema.
+  // Column names match your Drizzle schema definitions
+  tables: {
+    // this can be set to false
+    // e.g. user: false,
+    users: {
+      id: true,
+      name: true,
+      email: true,
+    },
+    posts: {
+      // or this can be set to false
+      // e.g. id: false,
+      id: true,
+      content: true,
+      // Use the JavaScript field name (authorId), not the DB column name (author_id)
+      authorId: true,
+    },
+  },
+
+  // Specify the casing style to use for the schema.
+  // This is useful for when you want to use a different casing style than the default.
+  // This works in the same way as the `casing` option in the Drizzle ORM.
+  //
+  // @example
+  // casing: "snake_case",
+});
+```
+
+You can customize this config file path with `-c, --config <input-file>`.
+
+**Important:** the `drizzle-zero.config.ts` file **must be included in the tsconfig**
+for the type resolution to work. If they are not included, there will be an error similar to
+`Failed to find type definitions`.
 
 ## Many-to-Many Relationships
 
