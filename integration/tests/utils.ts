@@ -1,7 +1,11 @@
 import { Zero } from "@rocicorp/zero";
-import { PostgreSqlContainer } from "@testcontainers/postgresql";
+import {
+  PostgreSqlContainer,
+  StartedPostgreSqlContainer,
+} from "@testcontainers/postgresql";
 import { exec } from "child_process";
 import { randomUUID } from "crypto";
+import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { drizzle } from "drizzle-orm/node-postgres";
 import path from "path";
 import { Pool } from "pg";
@@ -10,6 +14,7 @@ import {
   Network,
   PullPolicy,
   StartedNetwork,
+  type StartedTestContainer,
 } from "testcontainers";
 import * as drizzleSchema from "../drizzle/schema";
 import {
@@ -22,10 +27,8 @@ import {
 } from "../drizzle/schema";
 import { schema } from "../schema";
 
-import type { NodePgDatabase } from "drizzle-orm/node-postgres";
-
-const PG_PORT = process.env.PG_VERSION === "17" ? 5732 : 5632;
-const ZERO_PORT = process.env.PG_VERSION === "17" ? 5949 : 4949;
+const PG_PORT = 5632;
+const ZERO_PORT = 4949;
 
 export const getNewZero = async () => {
   return new Zero({
@@ -45,6 +48,8 @@ const pool = new Pool({
 });
 
 let startedNetwork: StartedNetwork | null = null;
+let postgresContainer: StartedPostgreSqlContainer | null = null;
+let zeroContainer: StartedTestContainer | null = null;
 
 export const db: NodePgDatabase<typeof drizzleSchema> = drizzle(pool, {
   schema: drizzleSchema,
@@ -105,7 +110,6 @@ export const seed = async () => {
       nameType: "custom-inline-type",
     },
   });
-
   await db.insert(user).values({
     id: "3",
     name: "Jane",
@@ -203,15 +207,17 @@ export const seed = async () => {
 };
 
 export const shutdown = async () => {
-await pool.end();
-await startedNetwork?.stop();
+  await pool.end();
+  await postgresContainer?.stop();
+  await zeroContainer?.stop();
+  await startedNetwork?.stop();
 };
 
 export const startPostgresAndZero = async () => {
-startedNetwork = await new Network().start();
+  startedNetwork = await new Network().start();
 
   // Start PostgreSQL container
-  const postgresContainer = await new PostgreSqlContainer(
+  postgresContainer = await new PostgreSqlContainer(
     `postgres:${process.env.PG_VERSION ?? "16"}`,
   )
     .withDatabase("drizzle_zero")
@@ -252,7 +258,7 @@ startedNetwork = await new Network().start();
   const basePgUrlWithExternalPort = `${basePgUrl}@127.0.0.1:${PG_PORT}`;
 
   // Start Zero container
-  const zeroContainer = await new GenericContainer(`rocicorp/zero:latest`)
+  zeroContainer = await new GenericContainer(`rocicorp/zero:latest`)
     .withExposedPorts({
       container: 4848,
       host: ZERO_PORT,
