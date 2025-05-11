@@ -27,8 +27,8 @@ import {
 } from "../drizzle/schema";
 import { schema } from "../schema";
 
-const PG_PORT = 5632;
-const ZERO_PORT = 4949;
+const PG_PORT = process.env.PG_VERSION === "17" ? 5732 : 5632;
+const ZERO_PORT = process.env.PG_VERSION === "17" ? 5949 : 4949;
 
 export const getNewZero = async () => {
   return new Zero({
