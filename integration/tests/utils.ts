@@ -207,10 +207,12 @@ export const seed = async () => {
 };
 
 export const shutdown = async () => {
-  await pool.end();
-  await zeroContainer?.stop();
-  await postgresContainer?.stop();
-  await startedNetwork?.stop();
+  try {
+    await pool.end();
+    await zeroContainer?.stop({ remove: true });
+    await postgresContainer?.stop({ remove: true });
+    await startedNetwork?.stop();
+  } catch (error) {}
 };
 
 export const startPostgresAndZero = async () => {

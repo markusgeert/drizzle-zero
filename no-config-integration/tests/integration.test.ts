@@ -45,6 +45,7 @@ describe("relationships", () => {
     expect(user[0]?.testType.nameType === "custom-inline-type").toBe(true);
 
     preloadedUsers.cleanup();
+    await zero.close();
   });
 
   test("can query filters", async () => {
@@ -67,6 +68,7 @@ describe("relationships", () => {
     expect(filters[0]?.children[0]?.children[0]?.name).toBeUndefined();
 
     preloadedFilters.cleanup();
+    await zero.close();
   });
 
   test("can query messages", async () => {
@@ -84,6 +86,7 @@ describe("relationships", () => {
     expect(messages[0]?.metadata.key).toStrictEqual("value1");
 
     preloadedMessages.cleanup();
+    await zero.close();
   });
 
   test("can query messages with filter", async () => {
@@ -103,6 +106,7 @@ describe("relationships", () => {
     expect(messages[0]?.metadata.key).toStrictEqual("value5");
 
     preloadedMessages.cleanup();
+    await zero.close();
   });
 
   test("can query messages with relationships", async () => {
@@ -121,6 +125,7 @@ describe("relationships", () => {
     expect(messages?.sender?.name).toBe("James");
 
     preloadedMessages.cleanup();
+    await zero.close();
   });
 
   test("can insert messages", async () => {
@@ -159,6 +164,7 @@ describe("relationships", () => {
     expect(medium?.name).toBe("whatsapp");
 
     preloadedMedium.cleanup();
+    await zero.close();
   });
 });
 
@@ -222,6 +228,7 @@ describe("types", () => {
     expect(result?.optionalUuid).toBeNull();
 
     preloadedAllTypes.cleanup();
+    await zero.close();
   });
 
   test("can insert all types", async () => {
@@ -351,5 +358,7 @@ describe("types", () => {
     expect(dbResult?.optionalEnum).toBeNull();
     expect(dbResult?.optionalVarchar).toBeNull();
     expect(dbResult?.optionalUuid).toBeNull();
+
+    await zero.close();
   });
 });
