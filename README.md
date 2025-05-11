@@ -141,7 +141,7 @@ function PostList() {
 
 ### Customize with `drizzle-zero.config.ts`
 
-If you want to customize the tables/columns that are synced by Zero, you can
+If you want to customize the tables/columns that are synced by Zero, you can optionally
 create a new config file at `drizzle-zero.config.ts` specifying the columns you want to
 include in the CLI output:
 
