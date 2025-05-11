@@ -35,7 +35,7 @@ export const getConfigFromFile = async ({
     );
   }
 
-  const zeroConfigImport = await tsImport(fullConfigPath, __filename);
+  const zeroConfigImport = await tsImport(fullConfigPath, import.meta.url);
   const exportName = zeroConfigImport?.default ? "default" : "schema";
   const zeroSchema = zeroConfigImport?.default ?? zeroConfigImport?.schema;
 

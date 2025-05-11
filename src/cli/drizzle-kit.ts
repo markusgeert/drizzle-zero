@@ -24,7 +24,7 @@ export const getDefaultConfig = async ({
     drizzleKitConfigPath,
   });
 
-  const drizzleSchema = await tsImport(resolvedDrizzleSchemaPath, __filename);
+  const drizzleSchema = await tsImport(resolvedDrizzleSchemaPath, import.meta.url);
 
   const zeroSchema = drizzleZeroConfig(drizzleSchema, {
     casing: drizzleCasing ?? undefined,
@@ -73,7 +73,7 @@ export const getFullDrizzleSchemaFilePath = async ({
     try {
       await fs.access(fullPath);
 
-      const drizzleKitConfigImport = await tsImport(fullPath, __filename);
+      const drizzleKitConfigImport = await tsImport(fullPath, import.meta.url);
 
       const drizzleKitConfig = drizzleKitConfigImport?.default as Config;
 
@@ -97,6 +97,7 @@ export const getFullDrizzleSchemaFilePath = async ({
       } catch (error) {
         console.error(
           `❌ drizzle-zero: could not find Drizzle file pulled from Drizzle Kit config at ${JSON.stringify(drizzleKitConfig)}`,
+          error,
         );
         process.exit(1);
       }
@@ -108,6 +109,7 @@ export const getFullDrizzleSchemaFilePath = async ({
     } catch (error) {
       console.error(
         `❌ drizzle-zero: could not find Drizzle Kit config file at ${drizzleKitConfigPath}`,
+        error,
       );
       process.exit(1);
     }

@@ -6,14 +6,14 @@
   "scripts": {
     "dev:cli": "tsx --watch cli/src/index.ts -c cli/test/drizzle-zero.config.ts -o cli/test/zero-schema.gen.ts",
     "clean": "rm -rf dist node_modules coverage && cd integration && rm -rf node_modules && cd ../no-config-integration && rm -rf node_modules",
-    "build": "rm -rf dist && tsx build.ts && chmod +x dist/bin.cjs",
+    "build": "rm -rf dist && tsx build.ts && chmod +x dist/cli/index.js",
     "release": "pnpm run build && pnpm publish",
     "test": "vitest run --typecheck --coverage",
     "test:types": "tsc --noEmit",
     "test:ui": "vitest --ui"
   },
   "bin": {
-    "drizzle-zero": "./dist/bin.cjs"
+    "drizzle-zero": "./dist/cli/index.js"
   },
   "main": "dist/index.cjs",
   "module": "dist/index.js",
@@ -63,7 +63,7 @@
       "optional": true
     }
   },
-  "devDependencies": {
+  "dependencies": {
     "@rocicorp/zero": "^0.19.2025050203",
     "@ts-morph/common": "^0.26.1",
     "@types/node": "^22.15.17",
