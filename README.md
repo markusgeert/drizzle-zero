@@ -67,8 +67,8 @@ You can then add the schema generation script to your `package.json`:
 ```
 
 This command will look for a Drizzle Kit config at `drizzle.config.ts` in the current directory
-and use the Drizzle schema defined in it. *This must be a single TS file and
-not a folder/glob for type resolution to work*. It will also use the
+and use the Drizzle schema defined in it. _This must be a single TS file and
+not a folder/glob for type resolution to work_. It will also use the
 casing defined in your drizzle config.
 
 You can change this behavior with `-d, --drizzle-schema <input-file>`

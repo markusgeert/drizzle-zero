@@ -139,9 +139,7 @@ async function cli() {
     )
     .option("-f, --format", `Format the generated schema`, false)
     .action(async (command) => {
-      console.log(
-        `⚙️  drizzle-zero: Generating zero schema from ${command.config}...`,
-      );
+      console.log(`⚙️  drizzle-zero: Generating zero schema...`);
 
       const zeroSchema = await main({
         config: command.config,

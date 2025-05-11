@@ -108,9 +108,7 @@ export const getFullDrizzleSchemaFilePath = async ({
     }
   }
 
-  console.error(
-    `❌ drizzle-zero: could not find Drizzle Kit config file`,
-  );
+  console.error(`❌ drizzle-zero: could not find Drizzle Kit config file`);
   process.exit(1);
 };
 
