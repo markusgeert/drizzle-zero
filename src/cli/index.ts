@@ -46,6 +46,7 @@ export interface GeneratorOptions {
   outputFilePath?: string;
   drizzleSchemaPath?: string;
   drizzleKitConfigPath?: string;
+  debug?: boolean;
 }
 
 async function main(opts: GeneratorOptions = {}) {
@@ -56,6 +57,7 @@ async function main(opts: GeneratorOptions = {}) {
     outputFilePath,
     drizzleSchemaPath,
     drizzleKitConfigPath,
+    debug,
   } = { ...opts };
 
   const resolvedTsConfigPath = tsConfigPath ?? defaultTsConfigFile;
@@ -84,6 +86,7 @@ async function main(opts: GeneratorOptions = {}) {
         drizzleSchemaPath,
         drizzleKitConfigPath,
         tsProject,
+        debug: Boolean(debug),
       });
 
   if (!result?.zeroSchema) {
@@ -118,10 +121,7 @@ async function cli() {
       "-c, --config <input-file>",
       `Path to the ${defaultConfigFile} configuration file`,
     )
-    .option(
-      "-d, --drizzle-schema <input-file>",
-      `Path to the Drizzle schema file`,
-    )
+    .option("-s, --schema <input-file>", `Path to the Drizzle schema file`)
     .option(
       "-k, --drizzle-kit-config <input-file>",
       `Path to the Drizzle Kit config file`,
@@ -138,6 +138,7 @@ async function cli() {
       defaultTsConfigFile,
     )
     .option("-f, --format", `Format the generated schema`, false)
+    .option("-d, --debug", `Enable debug mode`)
     .action(async (command) => {
       console.log(`⚙️  drizzle-zero: Generating zero schema...`);
 
@@ -148,6 +149,7 @@ async function cli() {
         outputFilePath: command.output,
         drizzleSchemaPath: command.drizzleSchema,
         drizzleKitConfigPath: command.drizzleKitConfig,
+        debug: command.debug,
       });
 
       if (command.output) {

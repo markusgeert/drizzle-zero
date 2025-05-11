@@ -485,6 +485,7 @@ export const schema = {
             "friendship",
             "requestingId"
           >,
+          serverName: "requesting_id",
         },
         acceptingId: {
           type: "string",
@@ -494,6 +495,7 @@ export const schema = {
             "friendship",
             "acceptingId"
           >,
+          serverName: "accepting_id",
         },
         accepted: {
           type: "boolean",

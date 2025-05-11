@@ -334,6 +334,8 @@ type DrizzleToZeroSchema<
  * @param config - Configuration object for the Zero schema generation
  * @param config.tables - Specify which tables and columns to include in sync
  * @param config.manyToMany - Optional configuration for many-to-many relationships through junction tables
+ * @param config.casing - The casing to use for the table name.
+ * @param config.debug - Whether to enable debug mode.
  *
  * @returns A configuration object for the Zero schema CLI.
  *
@@ -421,7 +423,7 @@ const drizzleZeroConfig = <
      * }
      * ```
      */
-    readonly tables: TColumnConfig;
+    readonly tables?: TColumnConfig;
 
     /**
      * Configuration for many-to-many relationships.
@@ -559,9 +561,9 @@ const drizzleZeroConfig = <
           }
 
           if (
-            !config.tables[junctionTableName as keyof typeof config.tables] ||
-            !config.tables[sourceTableName as keyof typeof config.tables] ||
-            !config.tables[destTableName as keyof typeof config.tables]
+            !config.tables?.[junctionTableName as keyof typeof config.tables] ||
+            !config.tables?.[sourceTableName as keyof typeof config.tables] ||
+            !config.tables?.[destTableName as keyof typeof config.tables]
           ) {
             debugLog(
               config.debug,
@@ -625,9 +627,9 @@ const drizzleZeroConfig = <
           }
 
           if (
-            !config.tables[junctionTableName as keyof typeof config.tables] ||
-            !config.tables[sourceTableName as keyof typeof config.tables] ||
-            !config.tables[destTableName as keyof typeof config.tables]
+            !config.tables?.[junctionTableName as keyof typeof config.tables] ||
+            !config.tables?.[sourceTableName as keyof typeof config.tables] ||
+            !config.tables?.[destTableName as keyof typeof config.tables]
           ) {
             // skip if any of the tables are not defined in the schema config
             continue;
@@ -721,9 +723,9 @@ const drizzleZeroConfig = <
         });
 
         if (
-          typeof config !== "undefined" &&
-          (!config?.tables[tableName as keyof typeof config.tables] ||
-            !config?.tables[referencedTableKey as keyof typeof config.tables])
+          typeof config?.tables !== "undefined" &&
+          (!config?.tables?.[tableName as keyof typeof config.tables] ||
+            !config?.tables?.[referencedTableKey as keyof typeof config.tables])
         ) {
           debugLog(
             config?.debug,

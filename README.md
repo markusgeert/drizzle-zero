@@ -71,7 +71,7 @@ and use the Drizzle schema defined in it. _This must be a single TS file and
 not a folder/glob for type resolution to work_. It will also use the
 casing defined in your drizzle config.
 
-You can change this behavior with `-d, --drizzle-schema <input-file>`
+You can change this behavior with `-s, --schema <input-file>`
 as the path to your Drizzle schema file, or
 `-k, --drizzle-kit-config <input-file>` with the path to your `drizzle.config.ts` file.
 
