@@ -14,7 +14,7 @@ export const getDefaultConfig = async ({
   drizzleSchemaPath: string | undefined;
   drizzleKitConfigPath: string | undefined;
   tsProject: Project;
-  debug: boolean;
+  debug?: boolean;
 }) => {
   const {
     drizzleSchemaPath: resolvedDrizzleSchemaPath,
@@ -24,11 +24,14 @@ export const getDefaultConfig = async ({
     drizzleKitConfigPath,
   });
 
-  const drizzleSchema = await tsImport(resolvedDrizzleSchemaPath, import.meta.url);
+  const drizzleSchema = await tsImport(
+    resolvedDrizzleSchemaPath,
+    import.meta.url,
+  );
 
   const zeroSchema = drizzleZeroConfig(drizzleSchema, {
     casing: drizzleCasing ?? undefined,
-    debug,
+    debug: Boolean(debug),
   });
 
   return {

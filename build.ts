@@ -1,4 +1,3 @@
-import * as esbuild from "esbuild";
 import * as tsup from "tsup";
 
 const main = async () => {
