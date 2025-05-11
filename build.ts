@@ -28,26 +28,6 @@ const main = async () => {
       "drizzle-orm",
     ],
   });
-
-  // esbuild.buildSync({
-  //   entryPoints: ["./src/cli/index.ts"],
-  //   bundle: true,
-  //   outfile: "dist/bin.js",
-  //   format: "esm",
-  //   target: "node16",
-  //   platform: "node",
-  //   external: [
-  //     "esbuild",
-  //     "tsx",
-  //     "prettier",
-  //     "typescript",
-  //     "@rocicorp/zero",
-  //     "drizzle-orm",
-  //   ],
-  //   banner: {
-  //     js: `#!/usr/bin/env node`,
-  //   },
-  // });
 };
 
 main().catch((e) => {
