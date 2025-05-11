@@ -208,8 +208,8 @@ export const seed = async () => {
 
 export const shutdown = async () => {
   await pool.end();
-  await postgresContainer?.stop();
   await zeroContainer?.stop();
+  await postgresContainer?.stop();
   await startedNetwork?.stop();
 };
 
