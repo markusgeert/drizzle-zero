@@ -5,7 +5,12 @@ import { randomUUID } from "crypto";
 import { drizzle } from "drizzle-orm/node-postgres";
 import path from "path";
 import { Pool } from "pg";
-import { GenericContainer, Network, PullPolicy } from "testcontainers";
+import {
+  GenericContainer,
+  Network,
+  PullPolicy,
+  StartedNetwork,
+} from "testcontainers";
 import * as drizzleSchema from "../drizzle/schema";
 import {
   allTypes,
@@ -38,6 +43,8 @@ const pool = new Pool({
   password: "password",
   database: "drizzle_zero",
 });
+
+let startedNetwork: StartedNetwork | null = null;
 
 export const db: NodePgDatabase<typeof drizzleSchema> = drizzle(pool, {
   schema: drizzleSchema,
@@ -196,10 +203,11 @@ export const seed = async () => {
 
 export const shutdown = async () => {
   await pool.end();
+  await startedNetwork?.stop();
 };
 
 export const startPostgresAndZero = async () => {
-  const network = await new Network().start();
+  startedNetwork = await new Network().start();
 
   // Start PostgreSQL container
   const postgresContainer = await new PostgreSqlContainer(
@@ -208,7 +216,7 @@ export const startPostgresAndZero = async () => {
     .withDatabase("drizzle_zero")
     .withUsername("user")
     .withPassword("password")
-    .withNetwork(network)
+    .withNetwork(startedNetwork)
     .withNetworkAliases("postgres-db")
     .withExposedPorts({
       container: 5432,
@@ -248,7 +256,7 @@ export const startPostgresAndZero = async () => {
       container: 4848,
       host: ZERO_PORT,
     })
-    .withNetwork(network)
+    .withNetwork(startedNetwork)
     .withEnvironment({
       ZERO_UPSTREAM_DB: `${basePgUrlWithInternalPort}/drizzle_zero`,
       ZERO_CVR_DB: `${basePgUrlWithInternalPort}/drizzle_zero`,
