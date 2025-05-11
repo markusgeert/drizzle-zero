@@ -1,76 +1,74 @@
-import {
-  Project,
-  VariableDeclarationKind,
-  type ExportedDeclarations,
-} from "ts-morph";
-
-export async function getZeroSchemaDefsFromConfig({
-  tsProject,
-  configPath,
-  exportName,
-}: {
-  tsProject: Project;
-  configPath: string;
-  exportName: string;
-}) {
-  const fileName = configPath.slice(configPath.lastIndexOf("/") + 1);
-
-  const sourceFile = tsProject.getSourceFile(fileName);
-
-  if (!sourceFile) {
-    throw new Error(
-      `❌ drizzle-zero: Failed to find type definitions for ${fileName}`,
-    );
-  }
-
-  const exportDeclarations = sourceFile.getExportedDeclarations();
-
-  for (const [name, declarations] of exportDeclarations.entries()) {
-    for (const declaration of declarations) {
-      if (exportName === name) {
-        return [name, declaration] as const;
-      }
-    }
-  }
-
-  throw new Error(
-    `❌ drizzle-zero: No config type found in the config file - did you export \`default\` or \`schema\`? Found: ${sourceFile
-      .getVariableDeclarations()
-      .map((v) => v.getName())
-      .join(", ")}`,
-  );
-}
+import { Project, VariableDeclarationKind } from "ts-morph";
+import type { getConfigFromFile } from "./config";
+import type { getDefaultConfig } from "./drizzle-kit";
 
 export async function getGeneratedSchema({
   tsProject,
-  zeroSchema,
-  zeroSchemaTypeDecl,
+  result,
   outputFilePath,
 }: {
   tsProject: Project;
-  zeroSchema: unknown;
-  zeroSchemaTypeDecl: readonly [string, ExportedDeclarations];
+  result:
+    | Awaited<ReturnType<typeof getConfigFromFile>>
+    | Awaited<ReturnType<typeof getDefaultConfig>>;
   outputFilePath: string;
 }) {
   const schemaObjectName = "schema";
-  const aliasName = "DrizzleConfigSchema";
   const typename = "Schema";
 
   const zeroSchemaGenerated = tsProject.createSourceFile(outputFilePath, "", {
     overwrite: true,
   });
 
-  const moduleSpecifier =
-    zeroSchemaGenerated.getRelativePathAsModuleSpecifierTo(
-      zeroSchemaTypeDecl[1].getSourceFile(),
-    );
-
-  // Add import for DrizzleConfigSchema
   zeroSchemaGenerated.addImportDeclaration({
-    moduleSpecifier,
-    namedImports: [{ name: zeroSchemaTypeDecl[0], alias: aliasName }],
+    moduleSpecifier: "drizzle-zero",
+    namedImports: [{ name: "ZeroCustomType" }],
     isTypeOnly: true,
   });
+
+  let zeroSchemaSpecifier: string | undefined;
+
+  if (result.type === "config") {
+    const moduleSpecifier =
+      zeroSchemaGenerated.getRelativePathAsModuleSpecifierTo(
+        result.zeroSchemaTypeDeclarations[1].getSourceFile(),
+      );
+
+    // Add import for DrizzleConfigSchema
+    zeroSchemaGenerated.addImportDeclaration({
+      moduleSpecifier,
+      namedImports: [{ name: result.exportName, alias: "zeroSchema" }],
+      isTypeOnly: true,
+    });
+
+    zeroSchemaSpecifier = "typeof zeroSchema";
+  } else {
+    const moduleSpecifier =
+      zeroSchemaGenerated.getRelativePathAsModuleSpecifierTo(
+        result.drizzleSchemaSourceFile,
+      );
+
+    zeroSchemaGenerated.addImportDeclaration({
+      moduleSpecifier,
+      namespaceImport: "drizzleSchema",
+      isTypeOnly: true,
+    });
+
+    // Add import for DrizzleToZeroSchema type
+    zeroSchemaGenerated.addImportDeclaration({
+      moduleSpecifier: "drizzle-zero",
+      namedImports: [{ name: "DrizzleToZeroSchema" }],
+      isTypeOnly: true,
+    });
+
+    zeroSchemaGenerated.addTypeAlias({
+      name: "ZeroSchema",
+      isExported: false,
+      type: `DrizzleToZeroSchema<typeof drizzleSchema${result.drizzleCasing ? `, "${result.drizzleCasing}"` : ""}>`,
+    });
+
+    zeroSchemaSpecifier = "ZeroSchema";
+  }
 
   const schemaVariable = zeroSchemaGenerated.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
@@ -113,8 +111,11 @@ export async function getGeneratedSchema({
 
                   // Special handling for customType: null
                   if (key === "customType" && propValue === null) {
+                    const tableIndex = 1;
+                    const columnIndex = 3;
+
                     writer.write(
-                      `null as typeof ${aliasName}${[...keys, "customType"].map((k) => `["${k}"]`).join("")}`,
+                      `null as unknown as ZeroCustomType<${zeroSchemaSpecifier}, "${keys[tableIndex]}", "${keys[columnIndex]}">`,
                     );
                   } else {
                     writeValue(propValue, [...keys, key], indent + 2);
@@ -134,7 +135,7 @@ export async function getGeneratedSchema({
             }
           };
 
-          writeValue(zeroSchema);
+          writeValue(result.zeroSchema);
           writer.write(` as const`);
         },
       },
@@ -165,12 +166,11 @@ export async function getGeneratedSchema({
 
   return `/* eslint-disable */
 /* tslint:disable */
-// @ts-nocheck
 // noinspection JSUnusedGlobalSymbols
 // biome-ignore-all
 /*
  * ------------------------------------------------------------
- * ## This file was automatically generated by drizzle-zero  ##
+ * ## This file was automatically generated by drizzle-zero. ##
  * ## Any changes you make to this file will be overwritten. ##
  * ##                                                        ##
  * ## Additionally, you should also exclude this file from   ##

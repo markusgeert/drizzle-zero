@@ -1,3 +1,4 @@
 packages:
   - "integration"
+  - "no-config-integration"
   - "custom-types"

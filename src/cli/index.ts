@@ -3,28 +3,14 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { pathToFileURL } from "node:url";
 import { Project } from "ts-morph";
-import { tsImport } from "tsx/esm/api";
-import { getGeneratedSchema, getZeroSchemaDefsFromConfig } from "./cli";
+import { getConfigFromFile, getDefaultConfigFilePath } from "./config";
+import { getDefaultConfig } from "./drizzle-kit";
+import { getGeneratedSchema } from "./shared";
 
 const defaultConfigFile = "./drizzle-zero.config.ts";
 const defaultOutputFile = "./zero-schema.gen.ts";
 const defaultTsConfigFile = "./tsconfig.json";
-
-export async function findConfigFile({
-  configFilePath,
-}: {
-  configFilePath: string;
-}) {
-  const files = await fs.readdir(process.cwd());
-
-  const configFile = files.find((file) => file.endsWith(configFilePath));
-  if (!configFile) {
-    console.error("❌  drizzle-zero: No configuration file found");
-    process.exit(1);
-  }
-
-  return configFile;
-}
+const defaultDrizzleKitConfigPath = "./drizzle.config.ts";
 
 export async function loadPrettier() {
   try {
@@ -36,7 +22,7 @@ export async function loadPrettier() {
     return await import(pathToFileURL(path).href);
   } catch {
     throw new Error(
-      "⚠️  prettier could not be found. Install it locally with\n  npm i -D prettier",
+      "⚠️  drizzle-zero: prettier could not be found. Install it locally with\n  npm i -D prettier",
     );
   }
 }
@@ -48,7 +34,7 @@ export async function formatSchema(schema: string): Promise<string> {
       parser: "typescript",
     });
   } catch (error) {
-    console.warn("⚠️  prettier not found, skipping formatting");
+    console.warn("⚠️  drizzle-zero: prettier not found, skipping formatting");
     return schema;
   }
 }
@@ -58,53 +44,61 @@ export interface GeneratorOptions {
   tsConfigPath?: string;
   format?: boolean;
   outputFilePath?: string;
+  drizzleSchemaPath?: string;
+  drizzleKitConfigPath?: string;
+  debug?: boolean;
 }
 
 async function main(opts: GeneratorOptions = {}) {
-  const { config, tsConfigPath, format, outputFilePath } = { ...opts };
+  const {
+    config,
+    tsConfigPath,
+    format,
+    outputFilePath,
+    drizzleSchemaPath,
+    drizzleKitConfigPath,
+    debug,
+  } = { ...opts };
 
-  const configFilePath =
-    config ??
-    (await findConfigFile({ configFilePath: config ?? defaultConfigFile }));
   const resolvedTsConfigPath = tsConfigPath ?? defaultTsConfigFile;
   const resolvedOutputFilePath = outputFilePath ?? defaultOutputFile;
 
-  const fullConfigPath = path.resolve(process.cwd(), configFilePath);
+  const defaultConfigFilePath = await getDefaultConfigFilePath();
 
-  try {
-    await fs.access(fullConfigPath);
-  } catch (error) {
-    console.error(
-      `❌ drizzle-zero: config file not found at ${fullConfigPath}`,
+  const configFilePath = config ?? defaultConfigFilePath;
+
+  if (!configFilePath) {
+    console.log(
+      "😶‍🌫️  drizzle-zero: Using all tables/columns from Drizzle schema",
     );
-    process.exit(1);
-  }
-
-  const zeroConfigImport = await tsImport(fullConfigPath, __filename);
-  const exportName = zeroConfigImport?.default ? "default" : "schema";
-  const zeroConfig = zeroConfigImport?.default ?? zeroConfigImport?.schema;
-
-  if (!zeroConfig) {
-    console.error(
-      "❌ drizzle-zero: No config found in the config file - did you export `default` or `schema`?",
-    );
-    process.exit(1);
   }
 
   const tsProject = new Project({
     tsConfigFilePath: resolvedTsConfigPath,
   });
 
-  const zeroSchemaTypeDecl = await getZeroSchemaDefsFromConfig({
-    tsProject,
-    configPath: fullConfigPath,
-    exportName,
-  });
+  const result = configFilePath
+    ? await getConfigFromFile({
+        configFilePath,
+        tsProject,
+      })
+    : await getDefaultConfig({
+        drizzleSchemaPath,
+        drizzleKitConfigPath,
+        tsProject,
+        debug: Boolean(debug),
+      });
+
+  if (!result?.zeroSchema) {
+    console.error(
+      "❌ drizzle-zero: No config found in the config file - did you export `default` or `schema`?",
+    );
+    process.exit(1);
+  }
 
   let zeroSchemaGenerated = await getGeneratedSchema({
     tsProject,
-    zeroSchema: zeroConfig,
-    zeroSchemaTypeDecl,
+    result,
     outputFilePath: resolvedOutputFilePath,
   });
 
@@ -126,7 +120,12 @@ async function cli() {
     .option(
       "-c, --config <input-file>",
       `Path to the ${defaultConfigFile} configuration file`,
-      defaultConfigFile,
+    )
+    .option("-s, --schema <input-file>", `Path to the Drizzle schema file`)
+    .option(
+      "-k, --drizzle-kit-config <input-file>",
+      `Path to the Drizzle Kit config file`,
+      defaultDrizzleKitConfigPath,
     )
     .option(
       "-o, --output <output-file>",
@@ -139,14 +138,18 @@ async function cli() {
       defaultTsConfigFile,
     )
     .option("-f, --format", `Format the generated schema`, false)
+    .option("-d, --debug", `Enable debug mode`)
     .action(async (command) => {
-      console.log(`⚙️  Generating zero schema from ${command.config}...`);
+      console.log(`⚙️  drizzle-zero: Generating zero schema...`);
 
       const zeroSchema = await main({
         config: command.config,
         tsConfigPath: command.tsconfig,
         format: command.format,
         outputFilePath: command.output,
+        drizzleSchemaPath: command.drizzleSchema,
+        drizzleKitConfigPath: command.drizzleKitConfig,
+        debug: command.debug,
       });
 
       if (command.output) {
@@ -158,7 +161,7 @@ async function cli() {
           `✅ drizzle-zero: Zero schema written to ${command.output}`,
         );
       } else {
-        console.log({
+        console.log("drizzle-zero: ", {
           schema: zeroSchema,
         });
       }

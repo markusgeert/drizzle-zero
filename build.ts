@@ -1,4 +1,3 @@
-import * as esbuild from "esbuild";
 import * as tsup from "tsup";
 
 const main = async () => {
@@ -10,17 +9,24 @@ const main = async () => {
     format: ["cjs", "esm"],
   });
 
-  esbuild.buildSync({
-    entryPoints: ["./src/cli/index.ts"],
-    bundle: true,
-    outfile: "dist/bin.cjs",
-    format: "cjs",
-    target: "node16",
-    platform: "node",
-    external: ["esbuild", "tsx", "prettier", "typescript"],
+  await tsup.build({
+    outDir: "./dist/cli",
+    splitting: false,
+    entry: ["src/cli/index.ts"],
+    format: ["esm"],
     banner: {
       js: `#!/usr/bin/env node`,
     },
+    target: "node16",
+    platform: "node",
+    external: [
+      "esbuild",
+      "tsx",
+      "prettier",
+      "typescript",
+      "@rocicorp/zero",
+      "drizzle-orm",
+    ],
   });
 };
 

@@ -15,8 +15,10 @@
  * ------------------------------------------------------------
  */
 
-import type { ZeroCustomType } from "drizzle-zero";
-import type { schema as zeroSchema } from "./drizzle-zero.config";
+import type { DrizzleToZeroSchema, ZeroCustomType } from "drizzle-zero";
+import type * as drizzleSchema from "./drizzle/schema";
+
+type ZeroSchema = DrizzleToZeroSchema<typeof drizzleSchema, "snake_case">;
 
 /**
  * The Zero schema object.
@@ -31,7 +33,7 @@ export const schema = {
           type: "number",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "createdAt"
           >,
@@ -40,7 +42,7 @@ export const schema = {
           type: "number",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "updatedAt"
           >,
@@ -49,7 +51,7 @@ export const schema = {
           type: "string",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "id"
           >,
@@ -58,7 +60,7 @@ export const schema = {
           type: "number",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "smallintField"
           >,
@@ -68,7 +70,7 @@ export const schema = {
           type: "number",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "integerField"
           >,
@@ -78,7 +80,7 @@ export const schema = {
           type: "number",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "bigintField"
           >,
@@ -88,7 +90,7 @@ export const schema = {
           type: "number",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "bigintNumberField"
           >,
@@ -98,7 +100,7 @@ export const schema = {
           type: "number",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "smallSerialField"
           >,
@@ -108,7 +110,7 @@ export const schema = {
           type: "number",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "serialField"
           >,
@@ -118,7 +120,7 @@ export const schema = {
           type: "number",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "bigSerialField"
           >,
@@ -128,7 +130,7 @@ export const schema = {
           type: "number",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "numericField"
           >,
@@ -138,7 +140,7 @@ export const schema = {
           type: "number",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "decimalField"
           >,
@@ -148,7 +150,7 @@ export const schema = {
           type: "number",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "realField"
           >,
@@ -158,7 +160,7 @@ export const schema = {
           type: "number",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "doublePrecisionField"
           >,
@@ -168,7 +170,7 @@ export const schema = {
           type: "string",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "textField"
           >,
@@ -178,7 +180,7 @@ export const schema = {
           type: "string",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "charField"
           >,
@@ -188,7 +190,7 @@ export const schema = {
           type: "string",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "uuidField"
           >,
@@ -198,7 +200,7 @@ export const schema = {
           type: "string",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "varcharField"
           >,
@@ -208,7 +210,7 @@ export const schema = {
           type: "boolean",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "booleanField"
           >,
@@ -218,7 +220,7 @@ export const schema = {
           type: "number",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "timestampField"
           >,
@@ -228,7 +230,7 @@ export const schema = {
           type: "number",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "timestampTzField"
           >,
@@ -238,7 +240,7 @@ export const schema = {
           type: "number",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "timestampModeString"
           >,
@@ -248,7 +250,7 @@ export const schema = {
           type: "number",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "timestampModeDate"
           >,
@@ -258,7 +260,7 @@ export const schema = {
           type: "number",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "dateField"
           >,
@@ -268,7 +270,7 @@ export const schema = {
           type: "json",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "jsonField"
           >,
@@ -278,7 +280,7 @@ export const schema = {
           type: "json",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "jsonbField"
           >,
@@ -288,7 +290,7 @@ export const schema = {
           type: "json",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "typedJsonField"
           >,
@@ -298,7 +300,7 @@ export const schema = {
           type: "string",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "statusField"
           >,
@@ -308,7 +310,7 @@ export const schema = {
           type: "number",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "optionalSmallint"
           >,
@@ -318,7 +320,7 @@ export const schema = {
           type: "number",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "optionalInteger"
           >,
@@ -328,7 +330,7 @@ export const schema = {
           type: "number",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "optionalBigint"
           >,
@@ -338,7 +340,7 @@ export const schema = {
           type: "number",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "optionalNumeric"
           >,
@@ -348,7 +350,7 @@ export const schema = {
           type: "number",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "optionalReal"
           >,
@@ -358,7 +360,7 @@ export const schema = {
           type: "number",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "optionalDoublePrecision"
           >,
@@ -368,7 +370,7 @@ export const schema = {
           type: "string",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "optionalText"
           >,
@@ -378,7 +380,7 @@ export const schema = {
           type: "boolean",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "optionalBoolean"
           >,
@@ -388,7 +390,7 @@ export const schema = {
           type: "number",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "optionalTimestamp"
           >,
@@ -398,7 +400,7 @@ export const schema = {
           type: "json",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "optionalJson"
           >,
@@ -408,7 +410,7 @@ export const schema = {
           type: "string",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "optionalEnum"
           >,
@@ -418,7 +420,7 @@ export const schema = {
           type: "string",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "optionalVarchar"
           >,
@@ -428,7 +430,7 @@ export const schema = {
           type: "string",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "allTypes",
             "optionalUuid"
           >,
@@ -445,7 +447,7 @@ export const schema = {
           type: "string",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "filters",
             "id"
           >,
@@ -454,7 +456,7 @@ export const schema = {
           type: "string",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "filters",
             "name"
           >,
@@ -463,7 +465,7 @@ export const schema = {
           type: "string",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "filters",
             "parentId"
           >,
@@ -479,7 +481,7 @@ export const schema = {
           type: "string",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "friendship",
             "requestingId"
           >,
@@ -489,7 +491,7 @@ export const schema = {
           type: "string",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "friendship",
             "acceptingId"
           >,
@@ -499,7 +501,7 @@ export const schema = {
           type: "boolean",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "friendship",
             "accepted"
           >,
@@ -514,7 +516,7 @@ export const schema = {
           type: "number",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "medium",
             "createdAt"
           >,
@@ -523,7 +525,7 @@ export const schema = {
           type: "number",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "medium",
             "updatedAt"
           >,
@@ -532,7 +534,7 @@ export const schema = {
           type: "string",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "medium",
             "id"
           >,
@@ -541,7 +543,7 @@ export const schema = {
           type: "string",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "medium",
             "name"
           >,
@@ -556,7 +558,7 @@ export const schema = {
           type: "number",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "message",
             "createdAt"
           >,
@@ -565,7 +567,7 @@ export const schema = {
           type: "number",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "message",
             "updatedAt"
           >,
@@ -574,7 +576,7 @@ export const schema = {
           type: "string",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "message",
             "id"
           >,
@@ -583,7 +585,7 @@ export const schema = {
           type: "string",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "message",
             "senderId"
           >,
@@ -592,7 +594,7 @@ export const schema = {
           type: "string",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "message",
             "mediumId"
           >,
@@ -601,7 +603,7 @@ export const schema = {
           type: "string",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "message",
             "body"
           >,
@@ -610,7 +612,7 @@ export const schema = {
           type: "json",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "message",
             "metadata"
           >,
@@ -625,7 +627,7 @@ export const schema = {
           type: "number",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "user",
             "createdAt"
           >,
@@ -634,7 +636,7 @@ export const schema = {
           type: "number",
           optional: true,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "user",
             "updatedAt"
           >,
@@ -643,7 +645,7 @@ export const schema = {
           type: "string",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "user",
             "id"
           >,
@@ -652,7 +654,7 @@ export const schema = {
           type: "string",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "user",
             "name"
           >,
@@ -661,7 +663,7 @@ export const schema = {
           type: "boolean",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "user",
             "partner"
           >,
@@ -670,7 +672,7 @@ export const schema = {
           type: "string",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "user",
             "email"
           >,
@@ -679,7 +681,7 @@ export const schema = {
           type: "json",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "user",
             "customTypeJson"
           >,
@@ -689,7 +691,7 @@ export const schema = {
           type: "json",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "user",
             "customInterfaceJson"
           >,
@@ -699,7 +701,7 @@ export const schema = {
           type: "json",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "user",
             "testInterface"
           >,
@@ -709,7 +711,7 @@ export const schema = {
           type: "json",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "user",
             "testType"
           >,
@@ -719,7 +721,7 @@ export const schema = {
           type: "json",
           optional: false,
           customType: null as unknown as ZeroCustomType<
-            typeof zeroSchema,
+            ZeroSchema,
             "user",
             "testExportedType"
           >,
@@ -730,44 +732,6 @@ export const schema = {
     },
   },
   relationships: {
-    user: {
-      mediums: [
-        {
-          sourceField: ["id"],
-          destField: ["senderId"],
-          destSchema: "message",
-          cardinality: "many",
-        },
-        {
-          sourceField: ["mediumId"],
-          destField: ["id"],
-          destSchema: "medium",
-          cardinality: "many",
-        },
-      ],
-      friends: [
-        {
-          sourceField: ["id"],
-          destField: ["requestingId"],
-          destSchema: "friendship",
-          cardinality: "many",
-        },
-        {
-          sourceField: ["acceptingId"],
-          destField: ["id"],
-          destSchema: "user",
-          cardinality: "many",
-        },
-      ],
-      messages: [
-        {
-          sourceField: ["id"],
-          destField: ["senderId"],
-          destSchema: "message",
-          cardinality: "many",
-        },
-      ],
-    },
     filters: {
       parent: [
         {
@@ -811,6 +775,16 @@ export const schema = {
           destField: ["id"],
           destSchema: "user",
           cardinality: "one",
+        },
+      ],
+    },
+    user: {
+      messages: [
+        {
+          sourceField: ["id"],
+          destField: ["senderId"],
+          destSchema: "message",
+          cardinality: "many",
         },
       ],
     },

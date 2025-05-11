@@ -128,50 +128,6 @@ describe("relationships", () => {
     await zero.close();
   });
 
-  test("can query many-to-many relationships", async () => {
-    const zero = await getNewZero();
-
-    const q = zero.query.user.related("mediums").one();
-
-    const preloadedUsers = await q.preload();
-    await preloadedUsers.complete;
-
-    const user = await q.one().run();
-
-    expect(user?.mediums).toHaveLength(2);
-    expect(user?.mediums?.[0]?.name).toBe("email");
-    expect(user?.mediums?.[1]?.name).toBe("whatsapp");
-    expect(user?.testInterface?.nameInterface).toBe("custom-inline-interface");
-    expect(user?.testType?.nameType).toBe("custom-inline-type");
-    expect(user?.customInterfaceJson?.custom).toBe(
-      "this-interface-is-imported-from-custom-types",
-    );
-    expect(user?.customTypeJson?.custom).toBe(
-      "this-is-imported-from-custom-types",
-    );
-    expect(user?.testExportedType.nameType).toBe("custom-inline-type");
-
-    preloadedUsers.cleanup();
-    await zero.close();
-  });
-
-  test("can query many-to-many extended relationships", async () => {
-    const zero = await getNewZero();
-
-    const q = zero.query.user.related("friends").one();
-
-    const preloadedUsers = await q.preload();
-    await preloadedUsers.complete;
-
-    const user = await q.one().run();
-
-    expect(user?.friends).toHaveLength(1);
-    expect(user?.friends[0]?.name).toBe("John");
-
-    preloadedUsers.cleanup();
-    await zero.close();
-  });
-
   test("can insert messages", async () => {
     const zero = await getNewZero();
 
