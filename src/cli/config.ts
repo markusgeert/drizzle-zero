@@ -1,5 +1,6 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
+import * as url from "node:url";
 import { Project } from "ts-morph";
 import { tsImport } from "tsx/esm/api";
 import type { DrizzleToZeroSchema } from "../relations";
@@ -35,7 +36,11 @@ export const getConfigFromFile = async ({
     );
   }
 
-  const zeroConfigImport = await tsImport(fullConfigPath, import.meta.url);
+  const zeroConfigFilePathUrl = url.pathToFileURL(fullConfigPath).href;
+  const zeroConfigImport = await tsImport(
+    zeroConfigFilePathUrl,
+    import.meta.url,
+  );
   const exportName = zeroConfigImport?.default ? "default" : "schema";
   const zeroSchema = zeroConfigImport?.default ?? zeroConfigImport?.schema;
 
