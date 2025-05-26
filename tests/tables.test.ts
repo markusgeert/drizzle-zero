@@ -39,7 +39,7 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
-import { describe, test } from "vitest";
+import { describe, test, vi } from "vitest";
 import { createZeroTableBuilder, type ColumnsConfig } from "../src";
 import { assertEqual, expectTableSchemaDeepEqual } from "./utils";
 
@@ -904,120 +904,176 @@ describe("tables", () => {
   });
 
   test("pg - array types", ({ expect }) => {
+    const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
     const testTable = pgTable("test", {
       id: text().primaryKey(),
       tags: text().array().notNull(),
       scores: jsonb().array(),
     });
 
-    expect(() =>
-      createZeroTableBuilder("test", testTable, {
-        id: true,
-        tags: true,
-        scores: true,
-      }),
-    ).toThrowErrorMatchingInlineSnapshot(
-      `[Error: drizzle-zero: Unsupported column type: PgArray (array). It must be supported by Zero, e.g.: number | bigint | boolean | date | PgText | PgChar | PgVarchar | PgUUID | PgEnumColumn | PgJsonb | PgJson | PgNumeric | PgDateString | PgTimestampString]`,
+    createZeroTableBuilder("test", testTable, {
+      id: true,
+      tags: true,
+      scores: true,
+    });
+
+    // Should warn about unsupported array types but not throw
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining(
+        "🚨  drizzle-zero: Unsupported column type: tags - PgArray (array)",
+      ),
     );
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining(
+        "🚨  drizzle-zero: Unsupported column type: scores - PgArray (array)",
+      ),
+    );
+
+    consoleSpy.mockRestore();
   });
 
   test("pg - interval types", ({ expect }) => {
+    const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
     const testTable = pgTable("test", {
       id: text().primaryKey(),
       interval: interval().notNull(),
     });
 
-    expect(() =>
-      createZeroTableBuilder("test", testTable, {
-        id: true,
-        interval: true,
-      }),
-    ).toThrowErrorMatchingInlineSnapshot(
-      `[Error: drizzle-zero: Unsupported column type: PgInterval (string). It must be supported by Zero, e.g.: number | bigint | boolean | date | PgText | PgChar | PgVarchar | PgUUID | PgEnumColumn | PgJsonb | PgJson | PgNumeric | PgDateString | PgTimestampString]`,
+    createZeroTableBuilder("test", testTable, {
+      id: true,
+      interval: true,
+    });
+
+    // Should warn about unsupported interval types but not throw
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining(
+        "🚨  drizzle-zero: Unsupported column type: interval - PgInterval (string)",
+      ),
     );
+
+    consoleSpy.mockRestore();
   });
 
   test("pg - cidr types", ({ expect }) => {
+    const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
     const testTable = pgTable("test", {
       id: text().primaryKey(),
       cidr: cidr().notNull(),
     });
 
-    expect(() =>
-      createZeroTableBuilder("test", testTable, {
-        id: true,
-        cidr: true,
-      }),
-    ).toThrowErrorMatchingInlineSnapshot(
-      `[Error: drizzle-zero: Unsupported column type: PgCidr (string). It must be supported by Zero, e.g.: number | bigint | boolean | date | PgText | PgChar | PgVarchar | PgUUID | PgEnumColumn | PgJsonb | PgJson | PgNumeric | PgDateString | PgTimestampString]`,
+    createZeroTableBuilder("test", testTable, {
+      id: true,
+      cidr: true,
+    });
+
+    // Should warn about unsupported cidr types but not throw
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining(
+        "🚨  drizzle-zero: Unsupported column type: cidr - PgCidr (string)",
+      ),
     );
+
+    consoleSpy.mockRestore();
   });
 
   test("pg - macaddr types", ({ expect }) => {
+    const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
     const testTable = pgTable("test", {
       id: text().primaryKey(),
       macaddr: macaddr().notNull(),
     });
 
-    expect(() =>
-      createZeroTableBuilder("test", testTable, {
-        id: true,
-        macaddr: true,
-      }),
-    ).toThrowErrorMatchingInlineSnapshot(
-      `[Error: drizzle-zero: Unsupported column type: PgMacaddr (string). It must be supported by Zero, e.g.: number | bigint | boolean | date | PgText | PgChar | PgVarchar | PgUUID | PgEnumColumn | PgJsonb | PgJson | PgNumeric | PgDateString | PgTimestampString]`,
+    createZeroTableBuilder("test", testTable, {
+      id: true,
+      macaddr: true,
+    });
+
+    // Should warn about unsupported macaddr types but not throw
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining(
+        "🚨  drizzle-zero: Unsupported column type: macaddr - PgMacaddr (string)",
+      ),
     );
+
+    consoleSpy.mockRestore();
   });
 
   test("pg - inet types", ({ expect }) => {
+    const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
     const testTable = pgTable("test", {
       id: text().primaryKey(),
       inet: inet().notNull(),
     });
 
-    expect(() =>
-      createZeroTableBuilder("test", testTable, {
-        id: true,
-        inet: true,
-      }),
-    ).toThrowErrorMatchingInlineSnapshot(
-      `[Error: drizzle-zero: Unsupported column type: PgInet (string). It must be supported by Zero, e.g.: number | bigint | boolean | date | PgText | PgChar | PgVarchar | PgUUID | PgEnumColumn | PgJsonb | PgJson | PgNumeric | PgDateString | PgTimestampString]`,
+    createZeroTableBuilder("test", testTable, {
+      id: true,
+      inet: true,
+    });
+
+    // Should warn about unsupported inet types but not throw
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining(
+        "🚨  drizzle-zero: Unsupported column type: inet - PgInet (string)",
+      ),
     );
+
+    consoleSpy.mockRestore();
   });
 
   test("pg - point types", ({ expect }) => {
+    const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
     const testTable = pgTable("test", {
       id: text().primaryKey(),
       point: point().notNull(),
     });
 
-    expect(() =>
-      createZeroTableBuilder("test", testTable, {
-        id: true,
-        point: true,
-      }),
-    ).toThrowErrorMatchingInlineSnapshot(
-      `[Error: drizzle-zero: Unsupported column type: PgPointTuple (array). It must be supported by Zero, e.g.: number | bigint | boolean | date | PgText | PgChar | PgVarchar | PgUUID | PgEnumColumn | PgJsonb | PgJson | PgNumeric | PgDateString | PgTimestampString]`,
+    createZeroTableBuilder("test", testTable, {
+      id: true,
+      point: true,
+    });
+
+    // Should warn about unsupported point types but not throw
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining(
+        "🚨  drizzle-zero: Unsupported column type: point - PgPointTuple (array)",
+      ),
     );
+
+    consoleSpy.mockRestore();
   });
 
   test("pg - line types", ({ expect }) => {
+    const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
     const testTable = pgTable("test", {
       id: text().primaryKey(),
       line: line().notNull(),
     });
 
-    expect(() =>
-      createZeroTableBuilder("test", testTable, {
-        id: true,
-        line: true,
-      }),
-    ).toThrowErrorMatchingInlineSnapshot(
-      `[Error: drizzle-zero: Unsupported column type: PgLine (array). It must be supported by Zero, e.g.: number | bigint | boolean | date | PgText | PgChar | PgVarchar | PgUUID | PgEnumColumn | PgJsonb | PgJson | PgNumeric | PgDateString | PgTimestampString]`,
+    createZeroTableBuilder("test", testTable, {
+      id: true,
+      line: true,
+    });
+
+    // Should warn about unsupported line types but not throw
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining(
+        "🚨  drizzle-zero: Unsupported column type: line - PgLine (array)",
+      ),
     );
+
+    consoleSpy.mockRestore();
   });
 
   test("pg - geometry types", ({ expect }) => {
+    const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
     const testTable = pgTable("test", {
       id: text().primaryKey(),
       location: geometry("location", {
@@ -1027,14 +1083,19 @@ describe("tables", () => {
       }).notNull(),
     });
 
-    expect(() =>
-      createZeroTableBuilder("test", testTable, {
-        id: true,
-        location: true,
-      }),
-    ).toThrowErrorMatchingInlineSnapshot(
-      `[Error: drizzle-zero: Unsupported column type: PgGeometryObject (json). It must be supported by Zero, e.g.: number | bigint | boolean | date | PgText | PgChar | PgVarchar | PgUUID | PgEnumColumn | PgJsonb | PgJson | PgNumeric | PgDateString | PgTimestampString]`,
+    createZeroTableBuilder("test", testTable, {
+      id: true,
+      location: true,
+    });
+
+    // Should warn about unsupported geometry types but not throw
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining(
+        "🚨  drizzle-zero: Unsupported column type: location - PgGeometryObject (json)",
+      ),
     );
+
+    consoleSpy.mockRestore();
   });
 
   test("pg - no primary key", ({ expect }) => {

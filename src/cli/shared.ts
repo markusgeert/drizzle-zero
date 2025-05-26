@@ -6,14 +6,14 @@ export async function getGeneratedSchema({
   tsProject,
   result,
   outputFilePath,
-  jsFileExtension,
+  jsFileExtension = false,
 }: {
   tsProject: Project;
   result:
     | Awaited<ReturnType<typeof getConfigFromFile>>
     | Awaited<ReturnType<typeof getDefaultConfig>>;
   outputFilePath: string;
-  jsFileExtension: boolean;
+  jsFileExtension?: boolean;
 }) {
   const schemaObjectName = "schema";
   const typename = "Schema";

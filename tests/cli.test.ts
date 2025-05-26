@@ -421,6 +421,91 @@ describe("getGeneratedSchema", () => {
     // Reset the mock after the test
     vi.restoreAllMocks();
   });
+
+  it("should add .js file extensions to imports when jsFileExtension is true", async () => {
+    const zeroSchemaTypeDecl = await getZeroSchemaDefsFromConfig({
+      tsProject,
+      configPath: schemaPath,
+      exportName: "schema",
+    });
+
+    // Generate schema with jsFileExtension enabled
+    const generatedSchema = await getGeneratedSchema({
+      tsProject,
+      result: {
+        type: "config",
+        zeroSchema: oneToOneSchema.schema,
+        exportName: "schema",
+        zeroSchemaTypeDeclarations: zeroSchemaTypeDecl,
+      },
+      outputFilePath,
+      jsFileExtension: true,
+    });
+
+    // Verify the import statement includes .js extension
+    expect(generatedSchema).toContain('from "./tests/schemas/one-to-one.zero.js";');
+    
+    // Verify the rest of the schema is still generated correctly
+    expect(generatedSchema).toContain("export const schema = {");
+    expect(generatedSchema).toContain('"users": {');
+  });
+
+
+
+  it("should add .js file extensions to drizzle-kit imports when jsFileExtension is true", async () => {
+    // Mock the DrizzleToZeroSchema type
+    vi.mock("drizzle-zero", () => ({
+      DrizzleToZeroSchema: class {},
+    }));
+
+    // Mock the drizzle schema source file
+    const mockSourceFile = tsProject.createSourceFile(
+      "mock-drizzle-schema.ts",
+      `
+        export const users = {
+          id: { type: "serial", primaryKey: true },
+          name: { type: "text", notNull: true }
+        };
+      `,
+    );
+
+    const mockSchema = {
+      tables: {
+        users: {
+          name: "users",
+          primaryKey: ["id"],
+          columns: {
+            id: { type: "integer", optional: false, customType: undefined },
+            name: { type: "string", optional: false, customType: undefined },
+          },
+        },
+      },
+      relationships: {},
+    };
+
+    // Generate the schema with jsFileExtension enabled for drizzle-kit type
+    const generatedSchema = await getGeneratedSchema({
+      tsProject,
+      result: {
+        type: "drizzle-kit",
+        zeroSchema: mockSchema as any,
+        drizzleSchemaSourceFile: mockSourceFile,
+        drizzleCasing: null,
+      },
+      outputFilePath,
+      jsFileExtension: true,
+    });
+
+    // Verify the import statement includes .js extension for drizzle schema
+    expect(generatedSchema).toContain('from "./mock-drizzle-schema.js";');
+    
+    // Verify the rest of the schema is still generated correctly
+    expect(generatedSchema).toContain("export const schema = {");
+    expect(generatedSchema).toContain('"users": {');
+
+    // Reset the mock after the test
+    vi.restoreAllMocks();
+  });
 });
 
 describe("drizzle-kit functions", () => {
