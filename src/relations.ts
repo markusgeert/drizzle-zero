@@ -466,6 +466,12 @@ const drizzleZeroConfig = <
   let tables: any[] = [];
 
   for (const [tableName, tableOrRelations] of typedEntries(schema)) {
+    if (!tableOrRelations) {
+      throw new Error(
+        `drizzle-zero: table or relation with key ${String(tableName)} is not defined`,
+      );
+    }
+
     if (is(tableOrRelations, Table)) {
       const table = tableOrRelations;
 
@@ -660,7 +666,13 @@ const drizzleZeroConfig = <
   }
 
   // get relationships from relations
-  for (const [_relationName, tableOrRelations] of typedEntries(schema)) {
+  for (const [relationName, tableOrRelations] of typedEntries(schema)) {
+    if (!tableOrRelations) {
+      throw new Error(
+        `drizzle-zero: table or relation with key ${String(relationName)} is not defined`,
+      );
+    }
+
     if (is(tableOrRelations, Relations)) {
       const actualTableName = getTableName(tableOrRelations.table);
       const tableName = getDrizzleKeyFromTableName({
