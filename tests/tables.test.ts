@@ -1088,7 +1088,6 @@ describe("tables", () => {
       location: true,
     });
 
-    // Should warn about unsupported geometry types but not throw
     expect(consoleSpy).toHaveBeenCalledWith(
       expect.stringContaining(
         "🚨  drizzle-zero: Unsupported column type: location - PgGeometryObject (json)",
