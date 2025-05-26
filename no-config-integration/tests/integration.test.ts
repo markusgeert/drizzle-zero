@@ -123,6 +123,7 @@ describe("relationships", () => {
     expect(messages?.medium?.name).toBe("email");
 
     expect(messages?.sender?.name).toBe("James");
+    expect(messages?.sender?.status).toBe("COMPLETED");
 
     preloadedMessages.cleanup();
     await zero.close();

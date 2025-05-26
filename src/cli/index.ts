@@ -47,6 +47,7 @@ export interface GeneratorOptions {
   drizzleSchemaPath?: string;
   drizzleKitConfigPath?: string;
   debug?: boolean;
+  jsFileExtension?: boolean;
 }
 
 async function main(opts: GeneratorOptions = {}) {
@@ -58,6 +59,7 @@ async function main(opts: GeneratorOptions = {}) {
     drizzleSchemaPath,
     drizzleKitConfigPath,
     debug,
+    jsFileExtension,
   } = { ...opts };
 
   const resolvedTsConfigPath = tsConfigPath ?? defaultTsConfigFile;
@@ -100,6 +102,7 @@ async function main(opts: GeneratorOptions = {}) {
     tsProject,
     result,
     outputFilePath: resolvedOutputFilePath,
+    jsFileExtension: Boolean(jsFileExtension),
   });
 
   if (format) {
@@ -139,6 +142,11 @@ async function cli() {
     )
     .option("-f, --format", `Format the generated schema`, false)
     .option("-d, --debug", `Enable debug mode`)
+    .option(
+      "-j, --js-file-extension",
+      `Add a .js file extension to the output (for usage without \"bundler\" module resolution)`,
+      false,
+    )
     .action(async (command) => {
       console.log(`⚙️  drizzle-zero: Generating zero schema...`);
 
@@ -150,6 +158,7 @@ async function cli() {
         drizzleSchemaPath: command.schema,
         drizzleKitConfigPath: command.drizzleKitConfig,
         debug: command.debug,
+        jsFileExtension: command.jsFileExtension,
       });
 
       if (command.output) {

@@ -6,12 +6,14 @@ export async function getGeneratedSchema({
   tsProject,
   result,
   outputFilePath,
+  jsFileExtension = false,
 }: {
   tsProject: Project;
   result:
     | Awaited<ReturnType<typeof getConfigFromFile>>
     | Awaited<ReturnType<typeof getDefaultConfig>>;
   outputFilePath: string;
+  jsFileExtension?: boolean;
 }) {
   const schemaObjectName = "schema";
   const typename = "Schema";
@@ -36,7 +38,9 @@ export async function getGeneratedSchema({
 
     // Add import for DrizzleConfigSchema
     zeroSchemaGenerated.addImportDeclaration({
-      moduleSpecifier,
+      moduleSpecifier: jsFileExtension
+        ? `${moduleSpecifier}.js`
+        : moduleSpecifier,
       namedImports: [{ name: result.exportName, alias: "zeroSchema" }],
       isTypeOnly: true,
     });
@@ -49,7 +53,9 @@ export async function getGeneratedSchema({
       );
 
     zeroSchemaGenerated.addImportDeclaration({
-      moduleSpecifier,
+      moduleSpecifier: jsFileExtension
+        ? `${moduleSpecifier}.js`
+        : moduleSpecifier,
       namespaceImport: "drizzleSchema",
       isTypeOnly: true,
     });

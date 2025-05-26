@@ -108,9 +108,14 @@ type ZeroMappedCustomType<
   columnType: "PgEnumColumn";
 }
   ? CD["data"]
-  : CD extends { $type: any }
-    ? CD["$type"]
-    : ZeroTypeToTypescriptType[ZeroMappedColumnType<TTable, KColumn>];
+  : CD extends {
+        columnType: "PgText";
+        enumValues: string[];
+      }
+    ? CD["enumValues"][number]
+    : CD extends { $type: any }
+      ? CD["$type"]
+      : ZeroTypeToTypescriptType[ZeroMappedColumnType<TTable, KColumn>];
 
 /**
  * Defines the structure of a column in the Zero schema.
@@ -303,9 +308,11 @@ const createZeroTableBuilder = <
         null;
 
       if (type === null) {
-        throw new Error(
-          `drizzle-zero: Unsupported column type: ${column.columnType} (${column.dataType}). It must be supported by Zero, e.g.: ${Object.keys({ ...drizzleDataTypeToZeroType, ...drizzleColumnTypeToZeroType }).join(" | ")}`,
+        console.warn(
+          `🚨  drizzle-zero: Unsupported column type: ${resolvedColumnName} - ${column.columnType} (${column.dataType}). It will not be included in the output. Must be supported by Zero, e.g.: ${Object.keys({ ...drizzleDataTypeToZeroType, ...drizzleColumnTypeToZeroType }).join(" | ")}`,
         );
+
+        return acc;
       }
 
       const isColumnOptional =
