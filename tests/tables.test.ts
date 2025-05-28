@@ -155,23 +155,26 @@ describe("tables", () => {
     };
 
     const testTable = pgTable("users", {
-      id: text().primaryKey(),
+      id: text().$type<`${string}-${string}`>().primaryKey(),
       metadata: jsonb().$type<UserMetadata>().notNull(),
       settings: jsonb().$type<Record<string, boolean>>(),
+      status: text("status", { enum: ["ASSIGNED", "COMPLETED"] }),
     });
 
     const result = createZeroTableBuilder("complex", testTable, {
       id: true,
       metadata: true,
       settings: true,
+      status: true,
     });
 
     const expected = table("complex")
       .from("users")
       .columns({
-        id: string(),
+        id: string<`${string}-${string}`>(),
         metadata: json<UserMetadata>(),
         settings: json<Record<string, boolean>>().optional(),
+        status: string<"ASSIGNED" | "COMPLETED">().optional(),
       })
       .primaryKey("id");
 
