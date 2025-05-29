@@ -7,6 +7,16 @@ const main = async () => {
     dts: true,
     entry: ["src/index.ts"],
     format: ["cjs", "esm"],
+    external: [
+      "esbuild",
+      "tsx",
+      "prettier",
+      "typescript",
+      "@rocicorp/zero",
+      "drizzle-orm",
+      "commander",
+      "ts-morph",
+    ],
   });
 
   await tsup.build({
