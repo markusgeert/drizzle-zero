@@ -6,13 +6,14 @@ import {
   string,
   table,
 } from "@rocicorp/zero";
-import { sql } from "drizzle-orm";
+import { SQL, sql } from "drizzle-orm";
 import { mysqlTable, text as textMysql } from "drizzle-orm/mysql-core";
 import {
   bigint,
   bigserial,
   char,
   cidr,
+  customType,
   date,
   doublePrecision,
   geometry,
@@ -38,6 +39,7 @@ import {
   timestamp,
   uuid,
   varchar,
+  type Precision,
 } from "drizzle-orm/pg-core";
 import { describe, test, vi } from "vitest";
 import { createZeroTableBuilder, type ColumnsConfig } from "../src";
@@ -175,6 +177,56 @@ describe("tables", () => {
         metadata: json<UserMetadata>(),
         settings: json<Record<string, boolean>>().optional(),
         status: string<"ASSIGNED" | "COMPLETED">().optional(),
+      })
+      .primaryKey("id");
+
+    expectTableSchemaDeepEqual(result.build()).toEqual(expected.build());
+    assertEqual(result.schema, expected.schema);
+  });
+
+  test("pg - custom column type", () => {
+    const customColumnType = customType<{
+      data: Date;
+      driverData: string;
+      config: { precision: Precision; withTimezone: boolean };
+    }>({
+      dataType(config) {
+        const precision = config !== undefined ? ` (${config.precision})` : "";
+        const timezone =
+          config !== undefined
+            ? config.withTimezone
+              ? " with time zone"
+              : " without time zone"
+            : "";
+
+        return `timestamp${precision}${timezone}`;
+      },
+      fromDriver(value: string): Date {
+        return new Date(value);
+      },
+      toDriver(value: Date | SQL): string | SQL {
+        if (value && "toISOString" in value) {
+          return value.toISOString();
+        }
+        return value;
+      },
+    });
+
+    const testTable = pgTable("users", {
+      id: text().primaryKey(),
+      createdAt: customColumnType("created_at").notNull(),
+    });
+
+    const result = createZeroTableBuilder("complex", testTable, {
+      id: true,
+      createdAt: string(),
+    });
+
+    const expected = table("complex")
+      .from("users")
+      .columns({
+        id: string(),
+        createdAt: string(),
       })
       .primaryKey("id");
 

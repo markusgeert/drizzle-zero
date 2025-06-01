@@ -298,6 +298,8 @@ const createZeroTableBuilder = <
       const isColumnBuilder = (value: unknown): value is ColumnBuilder<any> =>
         typeof value === "object" && value !== null && "schema" in value;
 
+      const isColumnConfigOverride = isColumnBuilder(columnConfig);
+
       const type =
         drizzleColumnTypeToZeroType[
           column.columnType as keyof DrizzleColumnTypeToZeroType
@@ -307,7 +309,7 @@ const createZeroTableBuilder = <
         ] ??
         null;
 
-      if (type === null) {
+      if (type === null && !isColumnConfigOverride) {
         console.warn(
           `🚨  drizzle-zero: Unsupported column type: ${resolvedColumnName} - ${column.columnType} (${column.dataType}). It will not be included in the output. Must be supported by Zero, e.g.: ${Object.keys({ ...drizzleDataTypeToZeroType, ...drizzleColumnTypeToZeroType }).join(" | ")}`,
         );
@@ -320,7 +322,7 @@ const createZeroTableBuilder = <
           ? column.hasDefault && column.defaultFn === undefined
             ? true
             : !column.notNull
-          : isColumnBuilder(columnConfig)
+          : isColumnConfigOverride
             ? columnConfig.schema.optional
             : false;
 
